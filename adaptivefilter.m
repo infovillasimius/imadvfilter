@@ -103,8 +103,8 @@ if nargin>4
         d=2;
     end
     
-    if d<2
-        d=2;
+    if d<1
+        d=1;
     end
     
 end
@@ -239,7 +239,7 @@ for i=pd+1:xmax-pd
         S=padI(i-pd:i+pd,j-pd:j+pd);      
         vl=var(S(:),1);
         
-        if vl/vR>d & pd>1
+        if pd>1 && vl/vR>d
             padIR(i,j)=centerpoint(S,pd,vR,d);
         else
             if vR>vl
@@ -257,18 +257,16 @@ end
 
 % funzione aggiuntiva per il filtro adattivo locale avanzato
 function p=centerpoint(I,pd,vR,d)
-
 center=pd+1;
 newpd=ceil(pd/2);
 padI=I(center-newpd:center+newpd,center-newpd:center+newpd);
 vl=var(padI(:),1);
-if vl/vR>d & newpd>1
-    
+if newpd>1 && vl/vR > d
     p=centerpoint(padI,newpd,vR,d);
 else
     z=I(center,center);
     ml=mean(padI(:));
-    if vl/vR>(d*0.5)
+    if vl>vR
         p=z-vR/vl*(z-ml);
     else
         p=ml;
