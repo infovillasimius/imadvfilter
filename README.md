@@ -1,27 +1,29 @@
 # imadvfilter
-Il filtro adattivo per la riduzione locale del rumore (Adaptive Local Noise Reduction Filter) è basato sulla formula:
 
-f(x,y)=g(x,y)-vR/vL(g(x,y)-mL) con vR = varianza rumore, vL = varianza locale, mL = media locale
+Adaptive Local Noise Reduction Filter (adaptive filter for local noise reduction) is based on the formula:
 
-in cui il rapporto, tra la varianza del rumore additivo gaussiano nell’immagine e la varianza locale dell’intorno del punto di applicazione, stabilisce la quantità con cui viene modificato il valore di ogni punto dell’immagine.
+f (x, y) = g (x, y) -vR / vL (g (x, y) -mL) with vR = noise variance, vL = local variance, mL = local average
 
-Al crescere della varianza del rumore possiamo notare come il risultato cambi in relazione alla dimensioni del filtro. Per valori piccoli esso rispetta perfettamente i dettagli ma non riesce a ripulire le zone ampie prive di particolari e l’immagine appare chiazzata.
+in which the ratio, between the variance of the Gaussian additive noise in the image and the local variance of the area around the application point, establishes the amount by which the value of each point of the image is modified.
 
-Se aumentiamo le dimensioni, le zone ampie risultano molto più uniformi e i dettagli non sono sfuocati ma, in prossimità ed in corrispondenza di questi il rumore non viene eliminato, lasciando tali zone praticamente inalterate.
+As noise variance grows, we can see how the result changes in relation to the size of the filter. For small values it perfectly respects the details but fails to clean up the large areas without details and the image appears mottled.
 
-Per migliorare la resa del filtro adattivo, eliminando tali problemi è stato sviluppato un nuovo algoritmo che aggiunge a quello di base il vantaggio di operare, quando è necessario, con una finestra più piccola, in prossimità ed in presenza di quei piccoli dettagli che, facendo aumentare la varianza locale ne aumentano il rapporto con la varianza del rumore, oltre una certa soglia (fornita al filtro come argomento).
+If we increase the size, the large areas are much more uniform and the details are not blurred but, in the vicinity and at these noise is not eliminated, leaving these areas virtually unaltered.
 
-Se il rapporto tra le varianze supera tale soglia, l’algoritmo prova a verificare se diminuendo le dimensioni del filtro, per quel punto, il rapporto scende di nuovo sotto soglia e, in tal caso, applica la formula base. In caso contrario continua a diminuire le dimensioni del filtro fino a raggiungere la misura minima prevista (3x3). Procede quindi alla verifica del valore del rapporto delle varianze e, se esso è maggiore di 1, applica sempre la formula base, sostituendo, in caso contrario, il valore del pixel corrente con la media dell’intorno 3x3 dello stesso.
+To improve the performance of the adaptive filter, by eliminating these problems a new algorithm has been developed that adds to the basic one the advantage of operating, when necessary, with a smaller window, near and in the presence of those small details that, by doing increasing the local variance increases the ratio with the noise variance, beyond a certain threshold (supplied to the filter as an argument).
 
-I risultati ottenuti con il procedimento descritto sono notevoli in termini di pulizia dell’immagine e rispetto dei dettagli.
-Per quantificare i risultati ottenibili dal filtro implementato, rispetto a quello base, si è provveduto ad effettuare dei test con diverse immagini (cameraman.tif, lenaBW.tif, x-ray.tif) ampiamente usate e conosciute, verificando, per ogni prova, l’errore quadratico medio ottenuto dal confronto tra l’immagine originale e quella ripulita.
+If the ratio between the variances exceeds this threshold, the algorithm tries to check whether by decreasing the filter size, for that point, the ratio drops back below the threshold and, in this case, applies the basic formula. Otherwise the filter dimensions will continue to decrease until the minimum size (3x3) is reached. It then proceeds to check the value of the ratio of the variances and, if it is greater than 1, always applies the basic formula, replacing, otherwise, the value of the current pixel with the average of the 3x3 around it.
 
-I test hanno previsto l’applicazione dei due filtri sull’immagine, addizionata con rumore di varianza crescente da 0,001 a 0,010, mantenendo costante la dimensione del filtro per tale serie di valori, per poi ricominciare con una dimensione maggiore in modo da calcolare i valori ottenuti con filtri da 3x3 a 15x15.
+The results obtained with the described procedure are remarkable in terms of image cleanliness and respect for details.
 
-Dall’osservazione dei dati e dei grafici ottenuti possiamo dedurre che il filtro adattivo locale avanzato produce, rispetto al già ottimo filtro adattivo locale, risultati migliori (errore quadratico medio minore) su tutte le immagini testate, soprattutto al crescere della varianza del rumore addizionato.
+In order to quantify the results obtainable from the implemented filter, with respect to the basic one, we proceeded to carry out tests with various images (cameraman.tif, lenaBW.tif, x-ray.tif) widely used and known, verifying, for each test, the average quadratic error obtained by comparing the original image with the cleaned one.
 
-Per ogni immagine si può notare, inoltre, l’esistenza di un valore ottimale per la dimensione del filtro, legato alla dimensione dei dettagli.
+The tests were carried out on the three images, added with increasing variance noise from 0.001 to 0.010, and with a filter size from 3x3 to 15x15.
 
-Per contro, considerato che nella funzione di rifinitura, eseguita ricorsivamente, la dimensione della finestra di applicazione viene dimezzata ad ogni passo, la complessità dell’algoritmo aumenta nel caso peggiore (vl/vR >d per tutti i pixel e per qualsiasi dimensione dell’intorno) di un fattore logaritmico log m, con m dimensione del filtro. 
+From the observation of the data and the graphs obtained we can deduce that the advanced local adaptive filter produces better results (lower average quadratic error) on all the images tested, with respect to the already excellent local adaptive filter, especially as the variance of the added noise increases.
 
-I dati sperimentali sui tempi di esecuzione, ottenuti con il profiler di MatLab, confermano tale affermazione.
+Furthermore, for each image there is an optimal value for the filter size, linked to the size of the details.
+
+On the other hand, considering that in the added part of the function, performed recursively, the size of the application window is halved at each step, the complexity of the algorithm increases in the worst case (vl / vR> d for all pixels and for any size of the 'around) of a logarithmic factor log m, with m size of the filter.
+
+Experimental data on execution times, obtained with the MatLab profiler, confirm this statement.
