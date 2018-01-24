@@ -2,6 +2,7 @@ clear
 close all
 I=imread ('lenaBW.tif');
 % I=imread ('x-ray.tif');
+% I=imread ('cameraman.tif');
 
 nome='cameraman';
 
@@ -19,7 +20,7 @@ for n=1:10
         imwrite(R1,nom1,'tif');
         % subplot(2,5,n),imshow(imsubtract(R1,I));
         err1(dim,n)=immse(R1,I)
-        R2=imadvfilter2(R,i,noise,1.5);%adaptivefilter(R,i,'advavg',noise,1.25);
+        R2=imadvfilter2b(R,i,noise,1.5);%adaptivefilter(R,i,'advavg',noise,1.25);
         nom2=char("adv"+nome+"-"+string(num2str(n))+'-'+string(num2str(i))+".tif")
         imwrite(R2,nom2,'tif');
         % subplot(2,5,5+n),imshow(imsubtract(R2,I));
