@@ -1,10 +1,22 @@
 clear
 close all
-I=imread ('cameraman.tif');
-R=imnoise(I,'gaussian',0,0.003);
-RR=imadvfilter2b(R,15,0.003,1.25);
-figure,imshow(RR);
+I=(imread ('lenaBW.tif'));
+noise=0.002;
+R=imnoise(I,'gaussian',0,noise);
+figure,imshow(R);
+m=7;
+t=cputime;
 
- J = imnoise(I,'gaussian',0,0.003);
- K = wiener2(J,[7 7]);
- figure,imshow(K);
+RR=(imadvfilter2b(R,m,noise,2));
+tfin=cputime;
+figure,imshow(RR);
+TotalTime=tfin-t;
+
+K = wiener2(R,[m m],noise);
+figure,imshow(K);
+
+err1=ssim(RR,I);
+err2=ssim(K,I);
+
+err3=immse(RR,I);
+err4=immse(K,I);

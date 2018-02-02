@@ -1,12 +1,26 @@
 clear
 close all
 I=imread ('anto.jpg');
-R=imnoise(I,'gaussian',0,0.002);
+R(:,:,1)=imadjust(I(:,:,1));
+R(:,:,2)=imadjust(I(:,:,2));
+R(:,:,3)=imadjust(I(:,:,3));
+
+noise=0.01;
+m=51;
+
+R=imnoise(I,'gaussian',0,noise);
 figure,imshow(R);
-RR(:,:,1)=imadvfilter2b(R(:,:,1),9,0.002,1.25);
-RR(:,:,2)=imadvfilter2b(R(:,:,2),9,0.002,1.25);
-RR(:,:,3)=imadvfilter2b(R(:,:,3),9,0.002,1.25);
+t=cputime;
+
+RR=imadvfilter2b(R,m,noise,2);
+tfin=cputime;
 figure,imshow(RR);
+TotalTime=tfin-t;
 
+K(:,:,1)=wiener2(R(:,:,1),[m m],noise);
+K(:,:,2)=wiener2(R(:,:,2),[m m],noise);
+K(:,:,3)=wiener2(R(:,:,3),[m m],noise);
+figure,imshow(K);
 
-
+err1=immse(RR,I)
+err2=immse(K,I)
