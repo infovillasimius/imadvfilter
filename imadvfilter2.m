@@ -77,30 +77,13 @@ R=depadI;
 end
 
 
+function v=stima(I,dim)
+F=ones(dim) / (dim*dim);
+    aml = filter2(F, I);
+    avl = filter2(F, I.^2) - aml.^2;
+v = mean2(avl);
+end
 
-function v=stima(I)
-for p=10:-1:1    
-    vp(p)=stimavarianza(I,p+5);
-end
-v=mean(vp);
-end
-
-function v=stimavarianza(I,p)
-I=im2double(I);
-[x,~]=size(I);
-pd=(ceil(x/p));
-padI=padarray(I,[pd,pd],'replicate','both');
-[xmax, ymax]= size(padI);
-xp=1;
-for i=pd+1:pd:xmax-pd
-    for j=pd+1:pd:ymax-pd
-        S=padI(i-pd:i+pd,j-pd:j+pd);          
-        vl(xp)=var(S(:));
-        xp=xp+1;          
-    end
-end
-v=min(vl(:));
-end
 
 function [I,dim,vR,d]=arginput(varargin)
 dim=-1;
@@ -128,10 +111,6 @@ switch nargin
         error('To many arguments')
 end
 
-if vR<0
-    vR=stima(im2double(I));
-end
-
 if dim<3
     dim=ceil(33+log2(vR)*3)*2-1;
     if dim>25
@@ -140,6 +119,10 @@ if dim<3
     if dim < 3
         dim = 3;
     end
+end
+
+if vR<0
+    vR=stima(im2double(I),dim);
 end
 
 if d<1
