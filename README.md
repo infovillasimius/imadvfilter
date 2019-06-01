@@ -1,4 +1,4 @@
-# imadvfilter
+# imadvfilter2
 
 Adaptive Local Noise Reduction Filter (adaptive filter for local noise reduction) is based on the formula:
 
@@ -27,3 +27,5 @@ Furthermore, for each image there is an optimal value for the filter size, linke
 On the other hand, considering that in the added part of the function, performed recursively, the size of the application window is halved at each step, the complexity of the algorithm increases in the worst case (vl / vR> d for all pixels and for any size of the 'around) of a logarithmic factor log m, with m size of the filter.
 
 Experimental data on execution times, obtained with the MatLab profiler, confirm this statement.
+
+Use: imadfilter2(Image,size,noise_variance,treshold)
