@@ -78,6 +78,15 @@ end
 
 
 function v=stima(I,dim)
+[~,~,c]=size(I);
+if c==3
+  vr(1)=stima(I(:,:,1),dim);
+  vr(2)=stima(I(:,:,1),dim);
+  vr(3)=stima(I(:,:,1),dim);
+  v=mean(vr);
+  return;
+end
+
 F=ones(dim) / (dim*dim);
     aml = filter2(F, I);
     avl = filter2(F, I.^2) - aml.^2;
